@@ -1,0 +1,9 @@
+{% if latest_5_course_list %}
+    <ul>
+    {% for course in latest_5_course_list %}
+        <li><a href="{% url 'TutorAid:detail' course.id %}">{{ course.name }} | {{ course.lesson }} | {{ course.module }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No courses are available.</p>
+{% endif %}
