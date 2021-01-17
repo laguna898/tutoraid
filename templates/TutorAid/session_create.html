@@ -1,0 +1,77 @@
+{% extends 'school/adminbase.html' %}
+
+{% block content %}
+
+    <head>
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"
+              id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+        <style media="screen">
+            a:link {
+                text-decoration: none;
+            }
+
+            .row {
+                margin: 100px;
+            }
+
+            .btnSubmit {
+                border: none;
+                border-radius: 1.5rem;
+                padding: 1%;
+                width: 20%;
+                cursor: pointer;
+                background: #0062cc;
+                color: #fff;
+            }
+        </style>
+
+    </head>
+
+    <div class="container">
+
+        <h3>Create new session for the course</h3>
+
+        <br>
+        <br>
+        <div>
+            <h4>Course Info</h4>
+            Name: {{ course.name }}<br>
+            Lesson: {{ course.lesson }}<br>
+            Module: {{ course.module }}<br>
+        </div>
+
+        <br>
+        <br>
+        <div>
+            <table class="table table-hover" id="session-table">
+                <thead>
+                <tr>
+                    <th>Session Time</th>
+                    <th>Session Duration</th>
+                </tr>
+                </thead>
+                {% for session in course_sessions %}
+                    <tr>
+                        <td>{{ session.created_at }}</td>
+                        <td>{{ session.duration }} hour(s)</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_table }}
+            <br>
+            <input type="submit" class="btnSubmit" value="Start new session">
+        </form>
+
+
+    </div>
+
+{% endblock content %}

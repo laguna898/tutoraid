@@ -1,0 +1,64 @@
+{% extends 'school/adminbase.html' %}
+
+{% block content %}
+
+    <head>
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"
+              id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+        <style media="screen">
+            a:link {
+                text-decoration: none;
+            }
+
+            h6 {
+                text-align: center;
+            }
+
+            .row {
+                margin: 100px;
+            }
+        </style>
+
+    </head>
+
+    <div class="container">
+
+        <div class="create-button">
+            <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:invoice_create' %}"><span
+                    class="glyphicon glyphicon-plus"></span>Create Monthly Invoices</a>
+        </div>
+
+        <div class="row">
+
+            <div class="panel panel-primary">
+                <table class="table table-hover" id="dev-table">
+                    <thead>
+                    <tr>
+                        <th>Invoice</th>
+                        <th>Total</th>
+                        <th>Payed(Y/N)</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    {% for invoice in invoices %}
+                        <tr>
+                            <td><a href="{% url 'TutorAid:invoice_detail' invoice.id %}">{{ invoice.year }} + "/" + {{ invoice.month }} - {{ invoice.student_name }}</a></td>
+                            <td>{{ invoice.total }}</td>
+                            <td>{{ invoice.payed }}</td>
+                            <td><a href="{% url 'TutorAid:invoice_update' invoice.id %}">Approve payment</a></td>
+
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+
+
+{% endblock content %}

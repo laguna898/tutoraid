@@ -1,0 +1,111 @@
+{% extends 'school/adminbase.html' %}
+
+{% block content %}
+
+    <head>
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"
+              id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+        <style media="screen">
+            a:link {
+                text-decoration: none;
+            }
+
+            h6 {
+                text-align: center;
+            }
+
+            .row {
+                margin: 100px;
+            }
+        </style>
+
+    </head>
+
+    <div class="container">
+
+        <h2>Student Details</h2>
+        <br>
+        <br>
+        <div>
+            <div style="display: inline">
+                <h4 style="display: inline">Student Info</h4>
+                <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:student_update' student.id %}"><span
+                        class="glyphicon glyphicon-edit"></span>Update</a>
+                <a class="btn btn-danger btn-xs" href="{% url 'TutorAid:student_delete' student.id %}"><span
+                        class="glyphicon glyphicon-trash"></span>Delete</a>
+            </div>
+            <div>
+                Name: {{ student.name }}<br>
+                Contact: {{ student.contact }}<br>
+                School: {{ student.school }}<br>
+            </div>
+
+        </div>
+
+        <br>
+        <br>
+
+        <div>
+            <h4>Registered Courses</h4>
+
+            <table class="table table-hover" id="student-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Lesson</th>
+                    <th>Module</th>
+                </tr>
+                </thead>
+                {% for course in registered_courses %}
+                    <tr>
+                        <td>{{ course.name }}</td>
+                        <td>{{ course.lesson }}</td>
+                        <td>{{ course.module }}</td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+            <p>you can only register for courses from Courses Page</p>
+
+        </div>
+
+        <br>
+        <br>
+
+        <div>
+            <h4>Invoice</h4>
+
+            <table class="table table-hover" id="invoice-table">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Year</th>
+                    <th>Month</th>
+                    <th>charge</th>
+                    <th>Payed</th>
+                </tr>
+                </thead>
+                {% for invoice in invoices %}
+                    <tr>
+                        <td>{{ invoice.year }}</td>
+                        <td>{{ invoice.month }}</td>
+                        <td>{{ invoice.charge }}</td>
+                        <td>{% if invoice.is_payed %} <p>YES</p> {% else %} <p>NO</p> {% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <br>
+        <br>
+        <br>
+
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    </div>
+
+{% endblock content %}

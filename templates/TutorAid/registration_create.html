@@ -1,0 +1,74 @@
+{% extends 'school/adminbase.html' %}
+
+{% block content %}
+
+    <head>
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"
+              id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+        <style media="screen">
+            a:link {
+                text-decoration: none;
+            }
+
+            .row {
+                margin: 100px;
+            }
+        </style>
+
+    </head>
+
+    <div class="container">
+
+        <h2>Register new students to the course</h2>
+        <br>
+        <br>
+        <div>
+            <h4>Course Info</h4>
+            Name: {{ course.name }}<br>
+            Lesson: {{ course.lesson }}<br>
+            Module: {{ course.module }}<br>
+        </div>
+
+        <br>
+        <br>
+
+        <div>
+            <h4>Registered Students</h4>
+            <table class="table table-hover" id="student-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>School</th>
+                </tr>
+                </thead>
+                {% for student in registered_students %}
+                    <tr>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.contact }}</td>
+                        <td>{{ student.school }}</td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <label for="students">Select students: </label>
+            {% for student in form.students %}
+                {{ student }}
+            {% endfor %}
+            <br>
+            <input type="submit" value="Add new students">
+        </form>
+
+
+    </div>
+
+{% endblock content %}

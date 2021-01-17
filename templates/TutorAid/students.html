@@ -1,0 +1,63 @@
+{% extends 'school/adminbase.html' %}
+
+{% block content %}
+
+    <head>
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"
+              id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+        <style media="screen">
+            a:link {
+                text-decoration: none;
+            }
+
+            h6 {
+                text-align: center;
+            }
+
+            .row {
+                margin: 100px;
+            }
+        </style>
+
+    </head>
+
+    <div class="container">
+
+        <div class="create-button">
+            <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:student_create' %}"><span
+                    class="glyphicon glyphicon-plus"></span>Create Student</a>
+        </div>
+
+        <div class="row">
+
+            <div class="panel panel-primary">
+                <table class="table table-hover" id="dev-table">
+                    <thead>
+                    <tr>
+                        <th>Student_id</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>School</th>
+                    </tr>
+                    </thead>
+                    {% for course in courses %}
+                        <tr>
+                            <td><a href="{% url 'TutorAid:student_detail' student.id %}">{{ student.name }}</a></td>
+                            <td>{{ student.name }}</td>
+                            <td>{{ student.contact }}</td>
+                            <td>{{ student.school }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+
+
+{% endblock content %}

@@ -1,0 +1,63 @@
+{% extends 'school/adminbase.html' %}
+
+{% block content %}
+
+    <head>
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"
+              id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+        <style media="screen">
+            a:link {
+                text-decoration: none;
+            }
+
+            h6 {
+                text-align: center;
+            }
+
+            .row {
+                margin: 100px;
+            }
+        </style>
+
+    </head>
+
+    <div class="container">
+
+        <div class="create-button">
+            <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:course_create' %}"><span
+                    class="glyphicon glyphicon-plus"></span>Create Course</a>
+        </div>
+
+        <div class="row">
+
+            <div class="panel panel-primary">
+                <table class="table table-hover" id="dev-table">
+                    <thead>
+                    <tr>
+                        <th>Course_id</th>
+                        <th>Lesson</th>
+                        <th>Module</th>
+                        <th>Fee (per student per hour)</th>
+                    </tr>
+                    </thead>
+                    {% for course in courses %}
+                        <tr>
+                            <td><a href="{% url 'TutorAid:course_detail' course.id %}">{{ course.name }}</a></td>
+                            <td>{{ course.lesson }}</td>
+                            <td>{{ course.module }}</td>
+                            <td>{{ course.fee_per_hour_per_student }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+
+
+{% endblock content %}

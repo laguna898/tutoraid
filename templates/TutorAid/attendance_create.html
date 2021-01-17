@@ -1,0 +1,68 @@
+{% extends 'school/adminbase.html' %}
+
+{% block content %}
+
+    <head>
+
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"
+              id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+        <style media="screen">
+            a:link {
+                text-decoration: none;
+            }
+
+            .row {
+                margin: 100px;
+            }
+
+            .btnSubmit {
+                border: none;
+                border-radius: 1.5rem;
+                padding: 1%;
+                width: 20%;
+                cursor: pointer;
+                background: #0062cc;
+                color: #fff;
+            }
+        </style>
+
+    </head>
+
+    <div class="container">
+
+        <h3>Take Attendance</h3>
+
+        <br>
+        <br>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <table class="table table-hover" id="attendance-table">
+                <thead>
+
+                <tr>
+                    <th>Student Name</th>
+                    <th>Attendance</th>
+                </tr>
+                </thead>
+
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.get_name }}</td>
+                        <td>{{ aform.status }}</td>
+                    </tr>
+                {% endfor %}
+
+
+            </table>
+            <br>
+            <input type="submit" class="btnSubmit" value="Submit Attendance">
+        </form>
+
+
+    </div>
+
+{% endblock content %}
