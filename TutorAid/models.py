@@ -17,7 +17,6 @@ class Course(models.Model):
         return self.name
 
     class Meta:
-        managed = False
         db_table = 'course'
 
 class Student(models.Model):
@@ -36,23 +35,21 @@ class Student(models.Model):
         return self.name
 
     class Meta:
-        managed = False
         db_table = 'student'
 
 class Registration(models.Model):
     id = models.AutoField(primary_key=True)
-    course_id = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
-    student_id = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
+    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
+    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
 
     class Meta:
-        managed = False
         db_table = 'registration'
 
 class Session(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     duration = models.IntegerField()
-    course_id = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
+    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
 
     @property
     def get_id(self):
@@ -62,13 +59,12 @@ class Session(models.Model):
         return self.course_id.__str__()
 
     class Meta:
-        managed = False
         db_table = 'session'
 
 class Attendance(models.Model):
     id = models.AutoField(primary_key=True)
-    session_id = models.ForeignKey(Session, on_delete=models.DO_NOTHING)
-    student_id = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
+    session = models.ForeignKey(Session, on_delete=models.DO_NOTHING)
+    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
     status = models.CharField(max_length=20)
 
     @property
@@ -79,12 +75,11 @@ class Attendance(models.Model):
         return self.student_id.__str__()
 
     class Meta:
-        managed = False
         db_table = 'attendance'
 
 class Invoice(models.Model):
     id = models.AutoField(primary_key=True)
-    student_id = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
+    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
     year = models.IntegerField()
     month = models.IntegerField()
     invoiced_at = models.DateField(auto_now_add=True)
@@ -95,5 +90,4 @@ class Invoice(models.Model):
         return self.student_id.__str__() + "|" + self.year + "/" + self.month + "|" + self.charge
 
     class Meta:
-        managed = False
         db_table = 'invoice'
