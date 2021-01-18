@@ -64,20 +64,20 @@ def course_delete_view(request, pk):
     return redirect(reverse('TutorAid:courses'))
 
 
-def registration_create_view(request, course_id):
-    course = Course.objects.get(id=course_id)
-    registered_students = Registration.objects.get(course_id=course_id)
-    registrationForm = forms.RegistrationForm()
+def registration_create_view(request, pk):
+    course = Course.objects.get(id=pk)
+    registered_students = course.registration_set.values('student_id').all()
+    registrationForm = forms.RegistrationForm(Student.objects.all().exclude(id__in=registered_students))
     if request.method == 'POST':
-        form = forms.RegistrationForm(Student.objects.all().filter(id=registered_students.student_id), request.POST)
+        form = forms.RegistrationForm(Student.objects, request.POST)
         if form.is_valid():
             Students = form.cleaned_data.get('students')
             for i in range(len(Students)):
                 RegistrationModel = Registration()
-                RegistrationModel.course_id = course_id
-                RegistrationModel.student_id = Students[i]
+                RegistrationModel.course_id = pk
+                RegistrationModel.student_id = Students[i].get_id
                 RegistrationModel.save()
-            return HttpResponseRedirect('course_detail')
+            return HttpResponseRedirect(reverse('TutorAid:course_detail', args=[pk]))
     return render(request, 'TutorAid/registration_create.html',
                   {'form': registrationForm, 'course': course, 'registered_students': registered_students})
 
@@ -93,7 +93,7 @@ def session_create_view(request, course_id):
             SessionModel.course_id = course_id
             SessionModel.duration = form.cleaned_data.get('duration')
             SessionModel.save()
-            return redirect('attendance_create', SessionModel.id)
+            return redirect(reverse('TutorAid:attendance_create', args=[SessionModel.id]))
     return render(request, 'TutorAid/session_create.html',
                   {'form': form, 'course': course, 'course_sessions': course_sessions})
 

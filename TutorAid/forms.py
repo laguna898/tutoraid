@@ -23,7 +23,7 @@ class StudentForm(forms.ModelForm):
 class RegistrationForm(forms.Form):
     def __init__(self, queryset, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
-        self.fields['student'] = forms.ModelMultipleChoiceField(widget = forms.CheckboxSelectMultiple, queryset=queryset)
+        self.fields['students'] = forms.ModelMultipleChoiceField(widget = forms.CheckboxSelectMultiple, queryset=queryset)
 
 #Session
 class SessionForm(forms.Form):
