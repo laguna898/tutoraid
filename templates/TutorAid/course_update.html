@@ -44,12 +44,7 @@
 
         <form action="" method="POST">
             {% csrf_token %}
-            {% render_field form.name placeholder=course.name %}
-            <br>
-            {% render_field form.lesson placeholder=course.lesson %}
-            <br>
-            {% render_field form.module placeholder=course.module %}
-            <br>
+            {{ form.as_p }}
             <input type="submit" class="btnSubmit" value="Create new course">
 
         </form>

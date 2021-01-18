@@ -31,7 +31,7 @@
 
         <form action="" method="POST">
             {% csrf_token %}
-            {{ form.as_table }}
+            {{ form.as_p }}
             <br>
             <input type="submit" value="Create new course">
         </form>
