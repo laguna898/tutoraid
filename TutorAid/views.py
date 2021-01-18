@@ -170,19 +170,17 @@ def student_update_view(request, pk):
     student = Student.objects.get(id=pk)
     form = forms.StudentForm(instance=student)
     if request.method == 'POST':
-        form = forms.StudentForm(request.POST)
+        form = forms.StudentForm(request.POST, instance=student)
         if form.is_valid():
-            student = form.save()
-            student.save()
-            return redirect('student_detail', pk)
+            form.save()
+            return redirect(reverse('TutorAid:student_detail', kwargs={'pk': pk}))
     return render(request, 'TutorAid/student_update.html', {'form': form, 'student': student})
 
 
 def student_delete_view(request, pk):
     student = Student.objects.get(id=pk)
     student.delete()
-    return redirect('TutorAid/students.html')
-
+    return redirect(reverse('TutorAid:students'))
 
 def sessions_view(request):
     sessions = Session.objects.all()

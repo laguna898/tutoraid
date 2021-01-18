@@ -44,13 +44,8 @@
 
         <form action="" method="POST">
             {% csrf_token %}
-            {% render_field form.name placeholder=student.name %}
-            <br>
-            {% render_field form.contact placeholder=student.lesson %}
-            <br>
-            {% render_field form.school placeholder=student.module %}
-            <br>
-            <input type="submit" class="btnSubmit" value="Create new student">
+            {{ form.as_p }}
+            <input type="submit" class="btnSubmit" value="Update">
 
         </form>
 
