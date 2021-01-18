@@ -100,22 +100,22 @@ def session_create_view(request, course_id):
 
 def attendance_create_view(request, session_id):
     session = Session.objects.get(id=session_id)
-    course = Course.objects.get(id=session.course_id)
-    registered_students = Registration.objects.all().filter(course_id=course.id)
-    students = Student.objects.all().filter(id=registered_students.student_id)
+    students = [registration.student for registration in session.course.registration_set.all()]
+    initial_values = [{'status': 'Present'} for _ in students]
+    formset = forms.AttendanceFormSet(initial=initial_values)
     aform = forms.AttendanceForm()
     if request.method == 'POST':
-        form = forms.AttendanceForm(request.POST)
-        if form.is_valid():
-            Attendances = request.POST.getlist('status')
-            for i in range(len(Attendances)):
+        formset = forms.AttendanceFormSet(request.POST, initial=initial_values)
+        if formset.is_valid():
+            for student, form in zip(students, formset):
                 AttendanceModel = Attendance()
-                AttendanceModel.session_id = session_id
-                AttendanceModel.student_id = students[i]
-                AttendanceModel.status = Attendances[i]
+                AttendanceModel.session = session
+                AttendanceModel.student = student
+                AttendanceModel.status = form.cleaned_data['status']
                 AttendanceModel.save()
-            return redirect('course_detail', course.id)
-    return render(request, 'TutorAid/attendance_create.html', {'students': students, 'form': aform})
+        return redirect(reverse('TutorAid:course_detail', args=[session.course.get_id]))
+    return render(request, 'TutorAid/attendance_create.html',
+                  {'students': students, 'form': aform, 'attendance_data': zip(students, formset), 'formset': formset})
 
 
 def attendance_update_view(request, session_id):
@@ -136,7 +136,7 @@ def attendance_update_view(request, session_id):
                 AttendanceModel.status = Attendances[i]
                 AttendanceModel.save()
             return redirect('course_detail', course.id)
-    return render(request, 'TutorAid/attendance_update.html', {'attendances': attendances, 'form': aform})
+    return render(request, 'TutorAid/attendance_update.html', {'attendances': attendances, 'aform': aform})
 
 
 def students_view(request):
@@ -202,9 +202,10 @@ def invoices_create_view(request):
 
     feeCalculation = Student.objects.select_related('attendance').select_related('session').select_related(
         'course').filter(attendance__session_id__created_at__gte=start_day_of_prev_month,
-                         attendance__session_id__created_at__lte=last_day_of_prev_month).values('name').annotate(fee=Sum(F('fee_per_hour_per_student')*F('duration')*F('status')))
+                         attendance__session_id__created_at__lte=last_day_of_prev_month).values('name').annotate(
+        fee=Sum(F('fee_per_hour_per_student') * F('duration') * F('status')))
 
-    #invoice.save()
+    # invoice.save()
     return redirect('TutorAid/invoices.html')
 
 

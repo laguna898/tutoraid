@@ -32,5 +32,6 @@ class SessionForm(forms.Form):
 #Attendance
 presence_choices=(('Present','Present'),('Absent','Absent'),('Absent by Prior Notice(0%)', 'Absent by Prior Notice(0%)'),('Absent by Late Notice(50%)','Absent by Late Notice(50%)'))
 class AttendanceForm(forms.Form):
-        status = forms.ChoiceField(choices=presence_choices)
+    status = forms.ChoiceField(choices=presence_choices)
 
+AttendanceFormSet = forms.formset_factory(AttendanceForm, extra=0)
