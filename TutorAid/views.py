@@ -33,7 +33,7 @@ def course_create_view(request):
         if form.is_valid():
             course = form.save()
             course.save()
-            return HttpResponseRedirect('courses')
+            return HttpResponseRedirect(reverse('TutorAid:courses'))
     return render(request, 'TutorAid/course_create.html', {'form': form})
 
 
@@ -51,18 +51,17 @@ def course_update_view(request, pk):
     course = Course.objects.get(id=pk)
     form = forms.CourseForm(instance=course)
     if request.method == 'POST':
-        form = forms.CourseForm(request.POST)
+        form = forms.CourseForm(request.POST, instance=course)
         if form.is_valid():
-            course = form.save()
-            course.save()
-            return redirect('course_detail', pk)
+            form.save()
+            return redirect(reverse('TutorAid:course_detail', kwargs={'pk': pk}), )
     return render(request, 'TutorAid/course_update.html', {'form': form, 'course': course})
 
 
 def course_delete_view(request, pk):
     course = Course.objects.get(id=pk)
     course.delete()
-    return redirect('TutorAid/courses.html')
+    return redirect(reverse('TutorAid:courses'))
 
 
 def registration_create_view(request, course_id):
