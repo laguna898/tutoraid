@@ -46,9 +46,9 @@
                     </thead>
                     {% for invoice in invoices %}
                         <tr>
-                            <td><a href="{% url 'TutorAid:invoice_detail' invoice.id %}">{{ invoice.year }} + "/" + {{ invoice.month }} - {{ invoice.student_name }}</a></td>
-                            <td>{{ invoice.total }}</td>
-                            <td>{{ invoice.payed }}</td>
+                            <td><a href="{% url 'TutorAid:invoice_detail' invoice.id %}">{{ invoice.year }}/{{ invoice.month }} - {{ invoice.student.name }}</a></td>
+                            <td>{{ invoice.charge }}</td>
+                            <td>{% if invoice.is_payed %} Y {% else %} N {% endif %}</td>
                             <td><a href="{% url 'TutorAid:invoice_approve' invoice.id %}">Approve payment</a></td>
 
                         </tr>
