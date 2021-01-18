@@ -106,10 +106,9 @@ def session_create_view(request, course_id):
 
 def attendance_create_view(request, session_id):
     session = Session.objects.get(id=session_id)
-    students = [registration.student for registration in session.course.registration_set.all()]
+    students = [registration.student for registration in session.course.registration_set.order_by('id')]
     initial_values = [{'status': 'Present'} for _ in students]
     formset = forms.AttendanceFormSet(initial=initial_values)
-    aform = forms.AttendanceForm()
     if request.method == 'POST':
         formset = forms.AttendanceFormSet(request.POST, initial=initial_values)
         if formset.is_valid():
@@ -121,28 +120,24 @@ def attendance_create_view(request, session_id):
                 AttendanceModel.save()
         return redirect(reverse('TutorAid:course_detail', args=[session.course.get_id]))
     return render(request, 'TutorAid/attendance_create.html',
-                  {'students': students, 'form': aform, 'attendance_data': zip(students, formset), 'formset': formset})
+                  {'attendance_data': zip(students, formset), 'formset': formset})
 
 
 def attendance_update_view(request, session_id):
-    attendances = Attendance.objects.all().filter(session_id=session_id)
     session = Session.objects.get(id=session_id)
-    course = Course.objects.get(id=session.course_id)
-    registered_students = Registration.objects.all().filter(course_id=course.id)
-    students = Student.objects.all().filter(id=registered_students.student_id)
-    aform = forms.AttendanceForm()
+    attendances = session.attendance_set.order_by('id')
+    students = list(map(lambda x: x.student, attendances))
+    initial_values = [{'status': attendance.status} for attendance in attendances]
+    formset = forms.AttendanceFormSet(initial=initial_values)
     if request.method == 'POST':
-        form = forms.AttendanceForm(request.POST)
-        if form.is_valid():
-            Attendances = request.POST.getlist('status')
-            for i in range(len(Attendances)):
-                AttendanceModel = Attendance()
-                AttendanceModel.session_id = session_id
-                AttendanceModel.student_id = students[i]
-                AttendanceModel.status = Attendances[i]
-                AttendanceModel.save()
-            return redirect('course_detail', course.id)
-    return render(request, 'TutorAid/attendance_update.html', {'attendances': attendances, 'aform': aform})
+        formset = forms.AttendanceFormSet(request.POST, initial=initial_values)
+        if formset.is_valid():
+            for attendance, form in zip(attendances, formset):
+                attendance.status = form.cleaned_data['status']
+                attendance.save()
+        return redirect(reverse('TutorAid:course_detail', args=[session.course.get_id]))
+    return render(request, 'TutorAid/attendance_create.html',
+                  {'attendance_data': zip(students, formset), 'formset': formset})
 
 
 def students_view(request):
