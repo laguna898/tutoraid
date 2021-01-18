@@ -28,7 +28,7 @@
     <div class="container">
 
         <div class="create-button">
-            <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:invoice_create' %}"><span
+            <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:invoices_create' %}"><span
                     class="glyphicon glyphicon-plus"></span>Create Monthly Invoices</a>
         </div>
 
@@ -49,7 +49,7 @@
                             <td><a href="{% url 'TutorAid:invoice_detail' invoice.id %}">{{ invoice.year }} + "/" + {{ invoice.month }} - {{ invoice.student_name }}</a></td>
                             <td>{{ invoice.total }}</td>
                             <td>{{ invoice.payed }}</td>
-                            <td><a href="{% url 'TutorAid:invoice_update' invoice.id %}">Approve payment</a></td>
+                            <td><a href="{% url 'TutorAid:invoice_approve' invoice.id %}">Approve payment</a></td>
 
                         </tr>
                     {% endfor %}
