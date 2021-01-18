@@ -39,8 +39,8 @@ class Student(models.Model):
 
 class Registration(models.Model):
     id = models.AutoField(primary_key=True)
-    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
-    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'registration'
@@ -49,7 +49,7 @@ class Session(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     duration = models.IntegerField()
-    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     @property
     def get_id(self):
@@ -64,8 +64,8 @@ class Session(models.Model):
 class Attendance(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    session = models.ForeignKey(Session, on_delete=models.DO_NOTHING)
-    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     status = models.CharField(max_length=30)
 
     @property
@@ -80,7 +80,7 @@ class Attendance(models.Model):
 
 class Invoice(models.Model):
     id = models.AutoField(primary_key=True)
-    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     year = models.IntegerField()
     month = models.IntegerField()
     invoiced_at = models.DateField(auto_now_add=True)
