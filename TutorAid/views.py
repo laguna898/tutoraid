@@ -184,7 +184,7 @@ def student_delete_view(request, pk):
 
 
 def sessions_view(request):
-    sessions = Student.objects.all()
+    sessions = Session.objects.all()
     return render(request, 'TutorAid/sessions.html', {'sessions': sessions})
 
 
