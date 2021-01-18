@@ -63,9 +63,10 @@ class Session(models.Model):
 
 class Attendance(models.Model):
     id = models.AutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     session = models.ForeignKey(Session, on_delete=models.DO_NOTHING)
     student = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
-    status = models.CharField(max_length=20)
+    status = models.CharField(max_length=30)
 
     @property
     def get_session(self):
@@ -83,7 +84,7 @@ class Invoice(models.Model):
     year = models.IntegerField()
     month = models.IntegerField()
     invoiced_at = models.DateField(auto_now_add=True)
-    charge = models.IntegerField()
+    charge = models.FloatField()
     is_payed = models.BooleanField(default=False)
 
     def __str__(self):

@@ -1,3 +1,5 @@
+from itertools import groupby
+
 from django.db.models import QuerySet
 from django.http import HttpResponse
 from django.http import Http404
@@ -151,7 +153,7 @@ def student_create_view(request):
         if form.is_valid():
             student = form.save()
             student.save()
-            return HttpResponseRedirect('students')
+            return HttpResponseRedirect(reverse('TutorAid:students'))
     return render(request, 'TutorAid/student_create.html', {'form': form})
 
 
@@ -197,16 +199,43 @@ def invoices_create_view(request):
     # if invoices of previous month already exist, cannot create a new one
     # can only create invoices of previous month from the first day of current month
 
-    last_day_of_prev_month = datetime.today().replace(day=1) - timedelta(days=1)
-    start_day_of_prev_month = datetime.today().replace(day=1) - timedelta(days=last_day_of_prev_month.day)
+    today = datetime.today()
+    current_month = today.replace(month=today.month + 1, day=1, hour=0, minute=0, microsecond=0)
+    last_day_of_prev_month = current_month - timedelta(days=1)
+    start_day_of_prev_month = current_month - timedelta(days=last_day_of_prev_month.day)
+    atts = Attendance\
+        .objects\
+        .select_related('session__course', 'student')\
+        .filter(created_at__gte=start_day_of_prev_month, created_at__lt=last_day_of_prev_month)\
+        .order_by('student__name')
+    atts_by_student = groupby(atts, lambda att: att.student)
 
-    feeCalculation = Student.objects.select_related('attendance').select_related('session').select_related(
-        'course').filter(attendance__session_id__created_at__gte=start_day_of_prev_month,
-                         attendance__session_id__created_at__lte=last_day_of_prev_month).values('name').annotate(
-        fee=Sum(F('fee_per_hour_per_student') * F('duration') * F('status')))
+    for student, atts in atts_by_student:
+
+        def calc_att_rate(att: Attendance):
+            if att.status == 'Absent by Prior Notice(0%)':
+                return 0
+            if att.status == 'Absent by Late Notice(50%)':
+                return 0.5
+            return 1
+
+        fee = sum(map(lambda att: calc_att_rate(att) * att.session.duration * att.session.course.fee_per_hour_per_student, atts))
+
+        invoice = Invoice()
+        invoice.student = student
+        invoice.charge = fee
+        invoice.year = last_day_of_prev_month.year
+        invoice.month = last_day_of_prev_month.month
+        invoice.save()
+        # print(student.name, fee)
+
+    # feeCalculation = Student.objects.select_related('attendance').select_related('session').select_related(
+    #     'course').filter(attendance__session_id__created_at__gte=start_day_of_prev_month,
+    #                      attendance__session_id__created_at__lte=last_day_of_prev_month).values('name').annotate(
+    #     fee=Sum(F('fee_per_hour_per_student') * F('duration') * F('status')))
 
     # invoice.save()
-    return redirect('TutorAid/invoices.html')
+    return redirect(reverse('TutorAid:invoices'))
 
 
 def invoice_approve_view(request, pk):
