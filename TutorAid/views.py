@@ -77,7 +77,7 @@ def registration_create_view(request, pk):
             for i in range(len(Students)):
                 RegistrationModel = Registration()
                 RegistrationModel.course_id = pk
-                RegistrationModel.student_id = Students[i].get_id
+                RegistrationModel.student_id = Students[i].id
                 RegistrationModel.save()
             return HttpResponseRedirect(reverse('TutorAid:course_detail', args=[pk]))
     return render(request, 'TutorAid/registration_create.html',
