@@ -44,7 +44,7 @@
                         <th>School</th>
                     </tr>
                     </thead>
-                    {% for course in courses %}
+                    {% for student in students %}
                         <tr>
                             <td><a href="{% url 'TutorAid:student_detail' student.id %}">{{ student.name }}</a></td>
                             <td>{{ student.name }}</td>
