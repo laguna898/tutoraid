@@ -88,7 +88,7 @@ class Invoice(models.Model):
     is_payed = models.BooleanField(default=False)
 
     def __str__(self):
-        return format("{}|{}/{}|{}", self.student_id, self.year, self.month, self.charge)
+        return "{} - {}/{}|{}".format(self.student, self.year, self.month, self.charge)
 
     class Meta:
         db_table = 'invoice'
