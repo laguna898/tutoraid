@@ -42,6 +42,7 @@
                 Name: {{ course.name }}<br>
                 Lesson: {{ course.lesson }}<br>
                 Module: {{ course.module }}<br>
+                Fee: {{ course.fee_per_hour_per_student }} per student per hour <br>
             </div>
 
         </div>
@@ -58,13 +59,15 @@
                     <th>Name</th>
                     <th>Contact</th>
                     <th>School</th>
+                    <th></th>
                 </tr>
                 </thead>
-                {% for student in registered_students %}
+                {% for registration in registrations %}
                     <tr>
-                        <td>{{ student.name }}</td>
-                        <td>{{ student.contact }}</td>
-                        <td>{{ student.school }}</td>
+                        <td>{{ registration.student.name }}</td>
+                        <td>{{ registration.student.contact }}</td>
+                        <td>{{ registration.student.school }}</td>
+                        <td><a href="{% url 'TutorAid:registration_delete' course.id registration.id %}">Delete registration</a></td>
                     </tr>
                 {% endfor %}
 

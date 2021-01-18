@@ -12,7 +12,10 @@ urlpatterns = [
     path('course/<int:pk>/detail', views.course_detail_view, name='course_detail'),
     path('course/<int:pk>/update', views.course_update_view, name='course_update'),
     path('course/<int:pk>/delete', views.course_delete_view, name='course_delete'),
+
     path('course/<int:pk>/registration/new', views.registration_create_view, name='registration_create'),
+    path('course/<int:pk>/registration/<int:registration_id>/delete', views.registration_delete_view, name='registration_delete'),
+
     path('course/<int:course_id>/session/new', views.session_create_view, name='session_create'),
     path('session/<int:session_id>/create-attendance', views.attendance_create_view, name='attendance_create'),
     path('session/<int:session_id>/update-attendance', views.attendance_update_view, name='attendance_update'),

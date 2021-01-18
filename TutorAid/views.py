@@ -41,12 +41,12 @@ def course_create_view(request):
 
 def course_detail_view(request, pk):
     course = Course.objects.get(id=pk)
-    registrations = Registration.objects.all().filter(course_id=pk).values("student_id")
-    registered_students = Student.objects.all().filter(id__in=registrations)
+    registrations = course.registration_set.select_related('student')
+    registered_students = [registration.student for registration in registrations]
     course_sessions = Session.objects.all().filter(course_id=pk)
 
     return render(request, 'TutorAid/course_detail.html',
-                  {'course': course, 'registered_students': registered_students, 'course_sessions': course_sessions})
+                  {'course': course, 'registrations': registrations, 'course_sessions': course_sessions})
 
 
 def course_update_view(request, pk):
@@ -83,6 +83,10 @@ def registration_create_view(request, pk):
     return render(request, 'TutorAid/registration_create.html',
                   {'form': registrationForm, 'course': course, 'registered_students': registered_students})
 
+def registration_delete_view(request, pk, registration_id):
+    registration = Registration.objects.get(id=registration_id)
+    registration.delete()
+    return redirect(reverse('TutorAid:course_detail', args=[pk]))
 
 def session_create_view(request, course_id):
     course = Course.objects.get(id=course_id)
@@ -227,14 +231,7 @@ def invoices_create_view(request):
         invoice.year = last_day_of_prev_month.year
         invoice.month = last_day_of_prev_month.month
         invoice.save()
-        # print(student.name, fee)
 
-    # feeCalculation = Student.objects.select_related('attendance').select_related('session').select_related(
-    #     'course').filter(attendance__session_id__created_at__gte=start_day_of_prev_month,
-    #                      attendance__session_id__created_at__lte=last_day_of_prev_month).values('name').annotate(
-    #     fee=Sum(F('fee_per_hour_per_student') * F('duration') * F('status')))
-
-    # invoice.save()
     return redirect(reverse('TutorAid:invoices'))
 
 
