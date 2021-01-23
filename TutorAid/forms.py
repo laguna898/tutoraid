@@ -11,7 +11,7 @@ class CourseForm(forms.ModelForm):
         model=models.Course
         lesson=forms.ChoiceField(choices=lesson_choices)
         module=forms.ChoiceField(choices=module_choices)
-        fields=['name','lesson','module','fee_per_hour_per_student']
+        fields=['name','lesson','module','fee']
 
 #Student
 class StudentForm(forms.ModelForm):

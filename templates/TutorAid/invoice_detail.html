@@ -44,57 +44,26 @@
 
         <br>
         <br>
-
         <div>
             <table class="table table-hover" id="fee-table">
                 <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Lesson</th>
-                    <th>Module</th>
+                    <th>Date</th>
+                    <th>Duration</th>
+                    <th>Fee</th>
                 </tr>
                 </thead>
-                {% for fee in fees %}
+                {% for att, fee in invoice_data %}
                     <tr>
-                        <td>{{ fee.student_name }}</td>
-                        <td>{{ course.lesson }}</td>
-                        <td>{{ course.module }}</td>
+                        <td>{{ att.created_at }}</td>
+                        <td>{{ att.session.duration }}</td>
+                        <td>{{ fee }}</td>
                     </tr>
                 {% endfor %}
 
             </table>
-            <p>you can only register for courses from Courses Page</p>
-
         </div>
 
-        <br>
-        <br>
-
-        <div>
-            <h4>Invoice</h4>
-
-            <table class="table table-hover" id="invoice-table">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Year</th>
-                    <th>Month</th>
-                    <th>charge</th>
-                    <th>Payed</th>
-                </tr>
-                </thead>
-                {% for invoice in invoices %}
-                    <tr>
-                        <td>{{ invoice.year }}</td>
-                        <td>{{ invoice.month }}</td>
-                        <td>{{ invoice.charge }}</td>
-                        <td>{% if invoice.is_payed %} <p>YES</p> {% else %} <p>NO</p> {% endif %}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-
-        <br>
         <br>
         <br>
 
