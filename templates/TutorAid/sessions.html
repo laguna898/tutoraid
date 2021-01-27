@@ -19,7 +19,7 @@
             }
 
             .row {
-                margin: 100px;
+                margin: 50px;
             }
         </style>
 
@@ -28,24 +28,27 @@
     <div class="container">
 
         <div>
-            <h4>Sessions</h4>
+            <h2 style="margin-left: 30px; margin-bottom: 20px;">Sessions/Attendances</h2>
 
-            <table class="table table-hover" id="session-table">
-                <thead>
-                <tr>
-                    <th>Session Time</th>
-                    <th>Session Duration</th>
-                    <th>Attendance</th>
-                </tr>
-                </thead>
-                {% for session in sessions %}
+            <div class="row">
+                <table class="table table-hover" id="session-table">
+                    <thead>
                     <tr>
-                        <td>{{ session.created_at }}</td>
-                        <td>{{ session.duration }} hour(s)</td>
-                        <td><a href="{% url 'TutorAid:attendance_update' session.id %}">Attendance</a></td>
+                        <th>Session Time</th>
+                        <th>Session Duration</th>
+                        <th>Attendance</th>
                     </tr>
-                {% endfor %}
-            </table>
+                    </thead>
+                    {% for session in sessions %}
+                        <tr>
+                            <td>{{ session.created_at }}</td>
+                            <td>{{ session.duration }} hour(s)</td>
+                            <td><a href="{% url 'TutorAid:attendance_update' session.id %}">Attendance</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
         </div>
 
     </div>

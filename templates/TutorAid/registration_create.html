@@ -46,11 +46,11 @@
                     <th>School</th>
                 </tr>
                 </thead>
-                {% for student in registered_students %}
+                {% for registration in registered_students %}
                     <tr>
-                        <td>{{ student.name }}</td>
-                        <td>{{ student.contact }}</td>
-                        <td>{{ student.school }}</td>
+                        <td>{{ registration.student.name }}</td>
+                        <td>{{ registration.student.contact }}</td>
+                        <td>{{ registration.student.school }}</td>
                     </tr>
                 {% endfor %}
 
@@ -60,9 +60,9 @@
 
         <form action="" method="POST">
             {% csrf_token %}
-            <label for="students">Select students: </label>
+            <label for="students">Select new students to register: </label><br><br>
             {% for student in form.students %}
-                {{ student }}
+                {{ student }} <br>
             {% endfor %}
             <br>
             <input type="submit" value="Add new students">

@@ -19,29 +19,37 @@
             }
 
             .row {
-                margin: 100px;
+                margin: 50px;
             }
+
+            .heading {
+                display: flex;
+                justify-content: space-between;
+            }
+
         </style>
 
     </head>
 
     <div class="container">
-
-        <div class="create-button">
-            <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:course_create' %}"><span
-                    class="glyphicon glyphicon-plus"></span>Create Course</a>
+        <div class="heading">
+            <h2 style="margin-left: 50px">Courses</h2>
+            <div class="create-button" style="margin-right: 50px; margin-top:20px;">
+                <a class="btn btn-primary btn-lg" href="{% url 'TutorAid:course_create' %}"><span
+                        class="glyphicon glyphicon-plus"></span>Create Course</a>
+            </div>
         </div>
-
         <div class="row">
 
+
             <div class="panel panel-primary">
-                <table class="table table-hover" id="dev-table">
+                <table class="table table-hover" id="dev-table" style="text-align:center;">
                     <thead>
                     <tr>
-                        <th>Course_id</th>
-                        <th>Lesson</th>
-                        <th>Module</th>
-                        <th>Fee (per student per hour)</th>
+                        <th style="text-align:center;">Course Name</th>
+                        <th style="text-align:center;">Lesson</th>
+                        <th style="text-align:center;">Module</th>
+                        <th style="text-align:center;">Fee (per student per hour)</th>
                     </tr>
                     </thead>
                     {% for course in courses %}

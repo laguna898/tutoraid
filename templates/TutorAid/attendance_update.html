@@ -41,20 +41,18 @@
 
         <form action="" method="POST">
             {% csrf_token %}
+            {{ formset.management_form }}
             <table class="table table-hover" id="attendance-table">
                 <thead>
-
                 <tr>
                     <th>Student Name</th>
                     <th>Attendance</th>
                 </tr>
                 </thead>
-
-                {% for attendance in attendances %}
+                {% for student, formset in attendance_data %}
                     <tr>
-                        <td>{{ attendance.student_id.get_name }}</td>
-                        <td>{% render_field form.status placeholder=attendance.status %}</td>
-
+                        <td>{{ student.get_name }}</td>
+                        <td>{{ formset.as_p }}</td>
                     </tr>
                 {% endfor %}
             </table>

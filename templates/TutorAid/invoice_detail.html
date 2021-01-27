@@ -35,9 +35,9 @@
                 <h4>Invoice Info</h4>
             </div>
             <div>
-                Student: {{ invoice.student_name }} <br>
-                Year/Month: {{ invoice.year }} + "/" + {{ invoice.month }}<br>
-                total: {{ invoice.total }}<br>
+                Student: {{ invoice.student.name }} <br>
+                Year/Month: {{ invoice.year }}/{{ invoice.month }}<br>
+                total: {{ invoice.charge }}<br>
             </div>
 
         </div>
@@ -49,6 +49,7 @@
                 <thead>
                 <tr>
                     <th>Date</th>
+                    <th>Course</th>
                     <th>Duration</th>
                     <th>Fee</th>
                 </tr>
@@ -56,6 +57,7 @@
                 {% for att, fee in invoice_data %}
                     <tr>
                         <td>{{ att.created_at }}</td>
+                        <td>{{ att.session.course }}</td>
                         <td>{{ att.session.duration }}</td>
                         <td>{{ fee }}</td>
                     </tr>

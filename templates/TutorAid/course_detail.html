@@ -19,7 +19,7 @@
             }
 
             .row {
-                margin: 100px;
+                margin: 50px;
             }
         </style>
 
@@ -27,10 +27,9 @@
 
     <div class="container">
 
-        <h2>Course Details</h2>
-        <br>
-        <br>
-        <div>
+        <h2 style="margin-left: 50px">Course Details</h2>
+
+        <div class="row">
             <div style="display: inline">
                 <h4 style="display: inline">Course Info</h4>
                 <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:course_update' course.id %}"><span
@@ -39,72 +38,74 @@
                         class="glyphicon glyphicon-trash"></span>Delete</a>
             </div>
             <div>
-                Name: {{ course.name }}<br>
-                Lesson: {{ course.lesson }}<br>
-                Module: {{ course.module }}<br>
-                Fee: {{ course.fee_per_hour_per_student }} per student per hour <br>
+                <br>
+                <strong>Name:</strong>   {{ course.name }}<br>
+                <strong>Lesson:</strong> {{ course.lesson }}<br>
+                <strong>Module:</strong> {{ course.module }}<br>
+                <strong>Fee:</strong> {{ course.fee_per_hour_per_student }} per student per hour <br>
+            </div>
+
+
+            <br>
+            <br>
+
+            <div>
+                <h4>Registered Students</h4>
+
+                <table class="table table-hover" id="student-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>School</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    {% for registration in registrations %}
+                        <tr>
+                            <td>{{ registration.student.name }}</td>
+                            <td>{{ registration.student.contact }}</td>
+                            <td>{{ registration.student.school }}</td>
+                            <td><a href="{% url 'TutorAid:registration_delete' course.id registration.id %}">Delete
+                                registration</a></td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+                <a class="btn btn-primary btn-xs"
+                   href="{% url 'TutorAid:registration_create' course.id %}"><span
+                        class="glyphicon glyphicon-plus"></span>Register New Student</a>
+
+            </div>
+
+            <br>
+            <br>
+
+            <div>
+                <h4>Sessions</h4>
+
+                <table class="table table-hover" id="session-table">
+                    <thead>
+                    <tr>
+                        <th>Session Time</th>
+                        <th>Session Duration</th>
+                        <th>Attendance</th>
+                    </tr>
+                    </thead>
+                    {% for session in course_sessions %}
+                        <tr>
+                            <td>{{ session.created_at }}</td>
+                            <td>{{ session.duration }} hour(s)</td>
+                            <td><a href="{% url 'TutorAid:attendance_update' session.id %}">Attendance</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:session_create' course.id %}"><span
+                        class="glyphicon glyphicon-plus"></span>Create Session</a>
             </div>
 
         </div>
-
-        <br>
-        <br>
-
-        <div>
-            <h4>Registered Students</h4>
-
-            <table class="table table-hover" id="student-table">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Contact</th>
-                    <th>School</th>
-                    <th></th>
-                </tr>
-                </thead>
-                {% for registration in registrations %}
-                    <tr>
-                        <td>{{ registration.student.name }}</td>
-                        <td>{{ registration.student.contact }}</td>
-                        <td>{{ registration.student.school }}</td>
-                        <td><a href="{% url 'TutorAid:registration_delete' course.id registration.id %}">Delete registration</a></td>
-                    </tr>
-                {% endfor %}
-
-            </table>
-            <a class="btn btn-primary btn-xs"
-               href="{% url 'TutorAid:registration_create' course.id %}"><span
-                    class="glyphicon glyphicon-plus"></span>Register New Student</a>
-
-        </div>
-
-        <br>
-        <br>
-
-        <div>
-            <h4>Sessions</h4>
-
-            <table class="table table-hover" id="session-table">
-                <thead>
-                <tr>
-                    <th>Session Time</th>
-                    <th>Session Duration</th>
-                    <th>Attendance</th>
-                </tr>
-                </thead>
-                {% for session in course_sessions %}
-                    <tr>
-                        <td>{{ session.created_at }}</td>
-                        <td>{{ session.duration }} hour(s)</td>
-                        <td><a href="{% url 'TutorAid:attendance_update' session.id %}">Attendance</a></td>
-                    </tr>
-                {% endfor %}
-            </table>
-
-            <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:session_create' course.id %}"><span
-                    class="glyphicon glyphicon-plus"></span>Create Session</a>
-        </div>
-
         <br>
         <br>
         <br>

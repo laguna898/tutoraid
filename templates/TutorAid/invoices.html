@@ -19,7 +19,12 @@
             }
 
             .row {
-                margin: 100px;
+                margin: 50px;
+            }
+
+            .heading {
+                display: flex;
+                justify-content: space-between;
             }
         </style>
 
@@ -27,26 +32,31 @@
 
     <div class="container">
 
-        <div class="create-button">
-            <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:invoices_create' %}"><span
-                    class="glyphicon glyphicon-plus"></span>Create Monthly Invoices</a>
+        <div class="heading">
+            <h2 style="margin-left: 50px">Invoices</h2>
+            <div class="create-button" style="margin-right: 50px; margin-top:20px;">
+                <a class="btn btn-primary btn-lg" href="{% url 'TutorAid:invoices_create' %}"><span
+                        class="glyphicon glyphicon-plus"></span>Create Monthly Invoices</a>
+            </div>
         </div>
 
         <div class="row">
 
             <div class="panel panel-primary">
-                <table class="table table-hover" id="dev-table">
+                <table class="table table-hover" id="dev-table" style="text-align:center;">
                     <thead>
                     <tr>
-                        <th>Invoice</th>
-                        <th>Total</th>
-                        <th>Payed(Y/N)</th>
+                        <th style="text-align:center;">Invoice</th>
+                        <th style="text-align:center;">Total</th>
+                        <th style="text-align:center;">Payed(Y/N)</th>
                         <th></th>
                     </tr>
                     </thead>
                     {% for invoice in invoices %}
                         <tr>
-                            <td><a href="{% url 'TutorAid:invoice_detail' invoice.id %}">{{ invoice.year }}/{{ invoice.month }} - {{ invoice.student.name }}</a></td>
+                            <td>
+                                <a href="{% url 'TutorAid:invoice_detail' invoice.id %}">{{ invoice.year }}/{{ invoice.month }}
+                                    - {{ invoice.student.name }}</a></td>
                             <td>{{ invoice.charge }}</td>
                             <td>{% if invoice.is_payed %} Y {% else %} N {% endif %}</td>
                             <td><a href="{% url 'TutorAid:invoice_approve' invoice.id %}">Approve payment</a></td>

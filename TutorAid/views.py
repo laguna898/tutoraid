@@ -68,6 +68,7 @@ def course_delete_view(request, pk):
 
 def registration_create_view(request, pk):
     course = Course.objects.get(id=pk)
+    registrations = course.registration_set.select_related('student')
     registered_students = course.registration_set.values('student_id').all()
     registrationForm = forms.RegistrationForm(Student.objects.all().exclude(id__in=registered_students))
     if request.method == 'POST':
@@ -81,12 +82,14 @@ def registration_create_view(request, pk):
                 RegistrationModel.save()
             return HttpResponseRedirect(reverse('TutorAid:course_detail', args=[pk]))
     return render(request, 'TutorAid/registration_create.html',
-                  {'form': registrationForm, 'course': course, 'registered_students': registered_students})
+                  {'form': registrationForm, 'course': course, 'registered_students': registrations})
+
 
 def registration_delete_view(request, pk, registration_id):
     registration = Registration.objects.get(id=registration_id)
     registration.delete()
     return redirect(reverse('TutorAid:course_detail', args=[pk]))
+
 
 def session_create_view(request, course_id):
     course = Course.objects.get(id=course_id)
@@ -136,7 +139,7 @@ def attendance_update_view(request, session_id):
                 attendance.status = form.cleaned_data['status']
                 attendance.save()
         return redirect(reverse('TutorAid:course_detail', args=[session.course.get_id]))
-    return render(request, 'TutorAid/attendance_create.html',
+    return render(request, 'TutorAid/attendance_update.html',
                   {'attendance_data': zip(students, formset), 'formset': formset})
 
 
@@ -182,6 +185,7 @@ def student_delete_view(request, pk):
     student.delete()
     return redirect(reverse('TutorAid:students'))
 
+
 def sessions_view(request):
     sessions = Session.objects.all()
     return render(request, 'TutorAid/sessions.html', {'sessions': sessions})
@@ -193,17 +197,14 @@ def invoices_view(request):
 
 
 def invoices_create_view(request):
-    # if invoices of previous month already exist, cannot create a new one
-    # can only create invoices of previous month from the first day of current month
-
     today = datetime.today()
     current_month = today.replace(month=today.month + 1, day=1, hour=0, minute=0, microsecond=0)
     last_day_of_prev_month = current_month - timedelta(days=1)
     start_day_of_prev_month = current_month - timedelta(days=last_day_of_prev_month.day)
-    atts = Attendance\
-        .objects\
-        .select_related('session__course', 'student')\
-        .filter(created_at__gte=start_day_of_prev_month, created_at__lt=last_day_of_prev_month)\
+    atts = Attendance \
+        .objects \
+        .select_related('session__course', 'student') \
+        .filter(created_at__gte=start_day_of_prev_month, created_at__lt=last_day_of_prev_month) \
         .order_by('student__name')
     atts_by_student = groupby(atts, lambda att: att.student)
 
@@ -216,7 +217,9 @@ def invoices_create_view(request):
                 return 0.5
             return 1
 
-        fee = sum(map(lambda att: calc_att_rate(att) * att.session.duration * att.session.course.fee_per_hour_per_student, atts))
+        fee = sum(
+            map(lambda att: calc_att_rate(att) * att.session.duration * att.session.course.fee_per_hour_per_student,
+                atts))
 
         invoice = Invoice()
         invoice.student = student
@@ -227,33 +230,34 @@ def invoices_create_view(request):
 
     return redirect(reverse('TutorAid:invoices'))
 
-def invoice_detail_view(request, invoice_id):
-    invoice = Invoice.objects.get(id=invoice_id)
-    invoice_month = datetime(year=invoice.year, month=invoice.month, day=1, hour=0, minute=0, microsecond=0)
+
+def invoice_detail_view(request, pk):
+    invoice = Invoice.objects.get(id=pk)
+    invoice_month = datetime(year=invoice.year, month=invoice.month + 1, day=1, hour=0, minute=0, microsecond=0)
     last_day_of_prev_month = invoice_month - timedelta(days=1)
     start_day_of_prev_month = invoice_month - timedelta(days=last_day_of_prev_month.day)
-    atts = Attendance.objects.select_related('invoice__student').filter(created_at__gte=start_day_of_prev_month,
-                                                                        created_at__lt=last_day_of_prev_month).orderby(
+    atts = Attendance.objects.select_related('session__course').filter(student=invoice.student).filter(
+        created_at__gte=start_day_of_prev_month,
+        created_at__lt=last_day_of_prev_month).order_by(
         'created_at')
+
+    def calc_attr_rate(att: Attendance):
+        if att.status == 'Absent by Prior Notice(0%)':
+            return 0
+        if att.status == 'Absent by Late Notice(50%)':
+            return 0.5
+        return 1
 
     fees = list()
     for att in atts:
-
-        def calc_attr_rate(att: Attendance):
-            if att.status == 'Absent by Prior Notice(0%)':
-                return 0
-            if att.status == 'Absent by Late Notice(50%)':
-                return 0.5
-            return 1
-
-        fee = sum(map(lambda att: calc_attr_rate(att) * att.session.duration * att.session.course.fee, atts))
+        fee = calc_attr_rate(att) * att.session.duration * att.session.course.fee_per_hour_per_student
         fees.append(fee)
 
     return render(request, 'TutorAid/invoice_detail.html', {'invoice': invoice, 'invoice_data': zip(atts, fees)})
 
 
-def invoice_approve_view(request, invoice_id):
-    invoice = Invoice.objects.get(id=invoice_id)
+def invoice_approve_view(request, pk):
+    invoice = Invoice.objects.get(id=pk)
     invoice.is_payed = True
     invoice.save()
     return redirect(reverse('TutorAid:invoices'))

@@ -19,29 +19,35 @@
             }
 
             .row {
-                margin: 100px;
+                margin: 50px;
+            }
+
+            .heading {
+                display: flex;
+                justify-content: space-between;
             }
         </style>
 
     </head>
 
     <div class="container">
-
-        <div class="create-button">
-            <a class="btn btn-primary btn-xs" href="{% url 'TutorAid:student_create' %}"><span
+    <div class="heading">
+        <h2 style="margin-left: 50px">Students</h2>
+        <div class="create-button" style="margin-right: 50px; margin-top:20px;">
+            <a class="btn btn-primary btn-lg" href="{% url 'TutorAid:student_create' %}"><span
                     class="glyphicon glyphicon-plus"></span>Create Student</a>
         </div>
+    </div>
 
         <div class="row">
 
             <div class="panel panel-primary">
-                <table class="table table-hover" id="dev-table">
-                    <thead>
+                <table class="table table-hover" id="dev-table" style="text-align:center;">
                     <tr>
-                        <th>Student_id</th>
-                        <th>Name</th>
-                        <th>Contact</th>
-                        <th>School</th>
+                        <th style="text-align:center;">Student_id</th>
+                        <th style="text-align:center;">Name</th>
+                        <th style="text-align:center;">Contact</th>
+                        <th style="text-align:center;">School</th>
                     </tr>
                     </thead>
                     {% for student in students %}
